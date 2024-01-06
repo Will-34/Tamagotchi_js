@@ -1,0 +1,284 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../dist/output.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="./proxy/TamagotchiJuego.js"></script>
+
+  <script src="./template/anya.js"></script>
+  <script src="./template/satoru.js"></script>
+  <script src="./template/emma.js"></script>
+  <script src="./state/state.js"></script>
+  <script src="./state/comiendo.js"></script>
+  <script src="./state/despierto.js"></script>
+  <script src="./state/durmiendo.js"></script>
+  <script src="./state/estudiando.js"></script>
+  <script src="./state/jugando.js"></script>
+  <script src="./state/tamagotchi.js"></script>
+  <script src="./proxy/tamagotchiProxy.js"></script>
+
+  <title>Game Will</title>
+</head>
+
+<body class=" bg-gradient-to-r from-teal-900 via-teal-600 to-teal-900">
+  <div class="bg-orange-400 text-center ">
+    <h5 clas="text-3xl "> Juego Will</h5>
+  </div>
+
+
+  <div class=" parent flex  items-start mt-6 justify-center">
+    <button type="button" onclick="alerta()" id="encender"
+      class="focus:outline-none text-white text-sm py-2.5 px-5 border-b-4 border-gray-600 rounded-md  bg-orange-600  hover:bg-red-700">Encender</button>
+  </div>
+
+  <div class=" parent flex  items-start mt-4 justify-center">
+    <div class="text-1xl no-underline hover:underline font-mono text-white  text-center" id="texto">Estado: Off</div>
+  </div>
+
+
+  <div class=" flex justify-center items-start mt-5">
+
+    <div class="h-96 w-72    items-start rounded-l-lg rounded-lg border-solid border-4 border-orange-100  " style="position: absolute">
+     
+    </div>
+
+    <div class="h-96 w-32  bg-orange-500   items-start rounded-l-lg " style="position: relative">
+      <h1 class="text-1xl no-underline hover:underline font-mono text-white  text-center">
+        TAMAGOTCHI
+      </h1>
+
+
+      <div class="ml-5 mr-40 mt-5">
+        <button type="button" onclick="despertar()"
+          class="focus:outline-none text-white text-sm py-2.5 px-5 border-b-4 border-gray-600 rounded-md bg-gray-500 hover:bg-gray-400">Despertar</button>
+      </div>
+
+      <div class="ml-5 mr-4 mt-5">
+        <button type="button" onclick="comer()"
+          class="focus:outline-none text-white text-sm py-2.5 px-5 border-b-4 border-gray-600 rounded-md bg-gray-500 hover:bg-gray-400">Comer</button>
+      </div>
+
+      <div class="ml-5 mr-4 mt-5">
+        <button type="button" onclick="jugar()"
+          class="focus:outline-none text-white text-sm py-2.5 px-5 border-b-4 border-gray-600 rounded-md bg-gray-500 hover:bg-gray-400">Jugar</button>
+      </div>
+
+      <div class="ml-5 mr-4 mt-5">
+        <button type="button" onclick="estudiar()"
+          class="focus:outline-none text-white text-sm py-2.5 px-5 border-b-4 border-gray-600 rounded-md bg-gray-500 hover:bg-gray-400">Estudiar</button>
+      </div>
+
+      <div class="ml-5 mr-4 mt-5">
+        <button type="button" onclick="dormir()"
+          class="focus:outline-none text-white text-sm py-2.5 px-5 border-b-4 border-gray-600 rounded-md bg-gray-500 hover:bg-gray-400">Dormir</button>
+      </div>
+
+
+    </div>
+
+    <div class="h-96 w-40 bg-orange-500   text-white flex justify-center items-center " style="position: relative">
+
+
+      <img src="../img/anya/off.png" id="imagen_tamagotchi" alt="">
+
+
+    </div>
+
+    <div class="h-96 w-2 bg-orange-500  rounded-r-lg" style="position: relative">
+
+
+    </div>
+
+  </div>
+  <script>
+    let imgchange = document.getElementById("imagen_tamagotchi");
+    let audioActual;
+    let seleccion;
+    let Estaencendido = false;
+    const tamagotchiInstance = new tamagotchi();
+    const anyaInstance = new anya();
+    const satoruInstance = new satoru();
+    const emmInstance = new emma();
+    const textoElemento = document.getElementById('texto');
+    const encenderElemento = document.getElementById('encender');
+
+    console.log(encenderElemento);
+
+    function pintar(accion) {
+      switch (seleccion) {
+        case 1:
+          const resultado = anyaInstance.Plantilla(accion, 1);
+          imgchange.src = "" + resultado;
+          textoElemento.textContent = 'Estado: ' + tamagotchiInstance.getImagen();
+          encenderElemento.textContent = 'Cambiar de personaje';
+          break;
+        case 2:
+          const resultado2 = satoruInstance.Plantilla(accion, 1);
+          imgchange.src = "" + resultado2;
+          textoElemento.textContent = 'Estado: ' + tamagotchiInstance.getImagen();
+          encenderElemento.textContent = 'Cambiar de personaje';
+          break;
+        case 3:
+          const resultado3 = emmInstance.Plantilla(accion, 1);
+          imgchange.src = "" + resultado3;
+          textoElemento.textContent = 'Estado: ' + tamagotchiInstance.getImagen();
+          encenderElemento.textContent = 'Cambiar de personaje';
+          break;
+        default:
+          console.log("No encendio el juego !");
+          Swal.fire({
+            icon: "warning",
+            title: "Encienda el juego primero !",
+          });
+      }
+    }
+
+    function despertar() {
+      if (Estaencendido) {
+        tamagotchiInstance.despertar();
+        pintar(tamagotchiInstance.getImagen());
+        console.log(tamagotchiInstance.getMensaje());
+        textoElemento.textContent = 'Estado: ' + tamagotchiInstance.getImagen();
+      } else {
+        console.log("No encendio el juego!");
+        Swal.fire({
+          icon: "warning",
+          title: "Encienda el juego primero !",
+        });
+      }
+    }
+    function comer() {
+      if (Estaencendido) {
+        tamagotchiInstance.comer();
+        pintar(tamagotchiInstance.getImagen());
+        console.log(tamagotchiInstance.getMensaje());
+        textoElemento.textContent = 'Estado: ' + tamagotchiInstance.getImagen();
+      } else {
+        console.log("No encendio el juego!");
+        Swal.fire({
+          icon: "warning",
+          title: "Encienda el juego primero !",
+        });
+      }
+    }
+    function jugar() {
+      if (Estaencendido) {
+        tamagotchiInstance.jugar();
+        pintar(tamagotchiInstance.getImagen());
+        console.log(tamagotchiInstance.getMensaje());
+        textoElemento.textContent = 'Estado: ' + tamagotchiInstance.getImagen();
+      } else {
+        console.log("No encendio el juego!");
+        Swal.fire({
+          icon: "warning",
+          title: "Encienda el juego primero !",
+        });
+      }
+
+    }
+    function estudiar() {
+      if (Estaencendido) {
+        tamagotchiInstance.estudiar();
+        pintar(tamagotchiInstance.getImagen());
+        console.log(tamagotchiInstance.getMensaje());
+        textoElemento.textContent = 'Estado: ' + tamagotchiInstance.getImagen();
+      } else {
+        console.log("No encendio el juego!");
+        Swal.fire({
+          icon: "warning",
+          title: "Encienda el juego primero !",
+        });
+      }
+    }
+    function dormir() {
+      if (Estaencendido) {
+        tamagotchiInstance.dormir();
+        pintar(tamagotchiInstance.getImagen());
+        console.log(tamagotchiInstance.getMensaje());
+        textoElemento.textContent = 'Estado: ' + tamagotchiInstance.getImagen();
+      } else {
+        console.log("No encendio el juego!");
+        Swal.fire({
+          icon: "warning",
+          title: "Encienda el juego primero !",
+        });
+      }
+    }
+
+    async function alerta() {
+      const inputOptions = new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            "Anya": "Anya",
+            "Satoru": "Satoru",
+            "Emma": "Emma"
+          });
+        }, 400);
+      });
+      const { value: personaje } = await Swal.fire({
+        title: "Seleccione un personaje!",
+        input: "radio",
+        inputOptions,
+        inputValidator: (value) => {
+          if (!value) {
+            return "Necesitas seleccionar uno! ";
+          }
+        },
+
+      });
+      if (personaje) {
+        Swal.fire({ html: `Elegiste : ${personaje}` });
+
+        if (audioActual) {
+          audioActual.pause();
+          audioActual.currentTime = 0; // Reiniciar la posición de reproducción al principio
+        }
+        switch (personaje) {
+          case "Anya":
+            reproducirAudio("../img/anya/anya.mp3");
+            seleccion = 1;
+            Estaencendido = true;
+            pintar(tamagotchiInstance.getImagen());
+            break;
+          case "Satoru":
+            reproducirAudio("../img/satoru/satoru.mp3");
+            seleccion = 2;
+            Estaencendido = true;
+            pintar(tamagotchiInstance.getImagen());
+            break;
+          case "Emma":
+            reproducirAudio("../img/emma/emma.mp3");
+            seleccion = 3;
+            Estaencendido = true;
+            pintar(tamagotchiInstance.getImagen());
+            break;
+          default:
+            // Si el personaje no coincide con ninguno de los casos anteriores, imprimir un mensaje
+            console.log("Personaje no reconocido");
+        }
+      }
+      console.log(seleccion);
+    }
+
+    function reproducirAudio(nombreAudio) {
+      const audio = new Audio(nombreAudio);
+      audio.loop = true;
+      audio.play();
+      audioActual = audio;
+    }
+
+  </script>
+<div class="flex items-center  mt-7 justify-center">
+  <img src="https://will2022.000webhostapp.com/notas/Presentacion/assets/img/chifuyu.png" width="40">
+  <div>
+    <strong>WilfredoPG</strong>
+    <span>dev</span>
+  </div>
+</div>
+
+</body>
+
+</html>
